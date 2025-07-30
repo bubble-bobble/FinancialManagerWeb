@@ -1,3 +1,4 @@
+using FinancialManager.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +19,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllersWithViews();
+        services.AddTransient<IAccountTypesRepository, AccountTypesRepository>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
