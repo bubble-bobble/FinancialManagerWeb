@@ -13,6 +13,14 @@ public class AccountTypesController : Controller
     {
         _accountTypesRepository = accountTypesRepository;
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Index()
+    {
+        const int userId = 1;
+        var accountTypes = await _accountTypesRepository.SelectAccountTypes(userId);
+        return View(accountTypes);       
+    }
     
     [HttpGet]
     public IActionResult Create()

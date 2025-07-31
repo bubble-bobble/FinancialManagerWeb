@@ -1,0 +1,49 @@
+@model IEnumerable<AccountTypeViewModel>
+
+@{
+    ViewData["Title"] = "Account types";
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <h5 class="card-title">Account types</h5>
+            <a asp-controller="AccountTypes" asp-action="Create">
+                Create account type
+            </a>
+        </div>
+        @if (Model.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Options</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var accountType in Model)
+                {
+                    <tr>
+                        <td>
+                            <a asp-controller="AccountTypes" asp-action="Edit" asp-route-id="@accountType.Id" class="btn btn-warning">
+                                Edit
+                            </a>
+                            <a asp-controller="AccountTypes" asp-action="Delete" asp-route-id="@accountType.Id" class="btn btn-danger">
+                                Delete
+                            </a>
+                        </td>
+                        <td>@accountType.Name</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-info" role="alert">
+                <p class="text-center">No account types found</p>
+            </div>
+        }
+    </div>
+</div>
