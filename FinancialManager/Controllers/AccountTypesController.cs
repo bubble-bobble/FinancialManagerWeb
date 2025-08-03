@@ -8,16 +8,18 @@ namespace FinancialManager.Controllers;
 public class AccountTypesController : Controller
 {
     private readonly IAccountTypesRepository _accountTypesRepository;
+    private readonly IUsersRepository _usersRepository;
 
-    public AccountTypesController(IAccountTypesRepository accountTypesRepository)
+    public AccountTypesController(IAccountTypesRepository accountTypesRepository, IUsersRepository usersRepository)
     {
         _accountTypesRepository = accountTypesRepository;
+        _usersRepository = usersRepository;
     }
 
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        const int userId = 1;
+        var userId = _usersRepository.SelectUserId();
         var accountTypes = await _accountTypesRepository.SelectAccountTypes(userId);
         return View(accountTypes);       
     }
@@ -36,15 +38,16 @@ public class AccountTypesController : Controller
             return View(accountType);
         }
 
-        accountType.UserId = 0;
-        accountType.UserId = 1;
+        accountType.UserId = _usersRepository.SelectUserId();
+        accountType.Sequence = 1;
         await _accountTypesRepository.InsertAccountType(accountType);
         return RedirectToAction("Index", "AccountTypes");
     }
 
     public async Task<IActionResult> ValidateAccountTypeName(string name)
     {
-        var exist = await _accountTypesRepository.SelectIfExistAccountType(name, 1);
+        var userId = _usersRepository.SelectUserId();
+        var exist = await _accountTypesRepository.SelectIfExistAccountType(name, userId);
         return exist ? Json($"Account type {name} already exists.") : Json(true);
     }
 }
