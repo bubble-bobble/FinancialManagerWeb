@@ -43,6 +43,32 @@ public class AccountTypesController : Controller
         await _accountTypesRepository.InsertAccountType(accountType);
         return RedirectToAction("Index", "AccountTypes");
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var userId = _usersRepository.SelectUserId();
+        var accountType = await _accountTypesRepository.SelectAccountType(id, userId);
+        if (accountType is null)
+        {
+            return RedirectToAction("Error", "Home");
+        }
+        return View(accountType);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(AccountTypeViewModel accountType)
+    {
+        var userId = _usersRepository.SelectUserId();
+        var accountTypeExist = await _accountTypesRepository.SelectAccountType(accountType.Id, userId);
+        if (accountTypeExist is null)
+        {
+            return RedirectToAction("Error", "Home");
+        }
+        
+        await _accountTypesRepository.UpdateAccountType(accountType);
+        return RedirectToAction("Index", "AccountTypes");       
+    }
 
     public async Task<IActionResult> ValidateAccountTypeName(string name)
     {

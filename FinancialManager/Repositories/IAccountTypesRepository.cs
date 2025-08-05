@@ -11,4 +11,8 @@ public interface IAccountTypesRepository
     Task<bool> SelectIfExistAccountType(string name, int userId);
 
     Task<IEnumerable<AccountTypeViewModel>> SelectAccountTypes(int userId);
+
+    Task<AccountTypeViewModel> SelectAccountType(int id, int userId);
+
+    Task UpdateAccountType(AccountTypeViewModel accountType);
 }

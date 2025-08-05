@@ -36,4 +36,18 @@ public class AccountTypesRepository : IAccountTypesRepository
         const string query = "SELECT * FROM AccountTypes WHERE UserId = @UserId ORDER BY Sequence";
         return await connection.QueryAsync<AccountTypeViewModel>(query, new { UserId = userId });
     }
+
+    public async Task<AccountTypeViewModel> SelectAccountType(int id, int userId)
+    {
+        await using var connection = new SqlConnection(_connectionString);
+        const string query = "SELECT Id, Name, Sequence FROM AccountTypes WHERE Id = @Id AND UserId = @UserId";
+        return await connection.QueryFirstOrDefaultAsync<AccountTypeViewModel>(query, new { Id = id, UserId = userId });       
+    }
+    
+    public async Task UpdateAccountType(AccountTypeViewModel accountType)
+    {
+        await using var connection = new SqlConnection(_connectionString);
+        const string query = "UPDATE AccountTypes SET Name = @Name WHERE Id = @Id";
+        await connection.ExecuteAsync(query, accountType);
+    }
 }
