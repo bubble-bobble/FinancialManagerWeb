@@ -15,4 +15,6 @@ public interface IAccountTypesRepository
     Task<AccountTypeViewModel> SelectAccountType(int id, int userId);
 
     Task UpdateAccountType(AccountTypeViewModel accountType);
+
+    Task DeleteAccountType(int id);
 }

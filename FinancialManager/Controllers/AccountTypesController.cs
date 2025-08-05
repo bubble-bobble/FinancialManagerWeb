@@ -70,6 +70,33 @@ public class AccountTypesController : Controller
         return RedirectToAction("Index", "AccountTypes");       
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var userId = _usersRepository.SelectUserId();
+        var accountType = await _accountTypesRepository.SelectAccountType(id, userId);
+        if (accountType is null)
+        {
+            return RedirectToAction("Error", "Home");
+        }
+
+        return View(accountType);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ConfirmDelete(int id)
+    {
+        var userId = _usersRepository.SelectUserId();
+        var accountType = await _accountTypesRepository.SelectAccountType(id, userId);
+        if (accountType is null)
+        {
+            return RedirectToAction("Error", "Home");
+        }
+
+        await _accountTypesRepository.DeleteAccountType(id);
+        return RedirectToAction("Index", "AccountTypes");
+    }
+
     public async Task<IActionResult> ValidateAccountTypeName(string name)
     {
         var userId = _usersRepository.SelectUserId();

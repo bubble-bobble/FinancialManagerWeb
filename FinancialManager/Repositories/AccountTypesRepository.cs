@@ -50,4 +50,11 @@ public class AccountTypesRepository : IAccountTypesRepository
         const string query = "UPDATE AccountTypes SET Name = @Name WHERE Id = @Id";
         await connection.ExecuteAsync(query, accountType);
     }
+
+    public async Task DeleteAccountType(int id)
+    {
+        await using var connection = new SqlConnection(_connectionString);
+        const string query = "DELETE FROM AccountTypes WHERE Id = @Id";
+        await connection.ExecuteAsync(query, new { Id = id });
+    }
 }
