@@ -20,3 +20,12 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/*
+  Custom rules
+*/
+
+#sortable
+{
+  cursor: move;
+}

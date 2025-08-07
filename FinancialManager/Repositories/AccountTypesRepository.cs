@@ -57,4 +57,11 @@ public class AccountTypesRepository : IAccountTypesRepository
         const string query = "DELETE FROM AccountTypes WHERE Id = @Id";
         await connection.ExecuteAsync(query, new { Id = id });
     }
+
+    public async Task Sort(IEnumerable<AccountTypeViewModel> accountTypes)
+    {
+        await using var connection = new SqlConnection(_connectionString);
+        const string query = "UPDATE AccountTypes SET Sequence = @Sequence WHERE Id = @Id";
+        await connection.ExecuteAsync(query, accountTypes);
+    }
 }

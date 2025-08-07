@@ -17,4 +17,6 @@ public interface IAccountTypesRepository
     Task UpdateAccountType(AccountTypeViewModel accountType);
 
     Task DeleteAccountType(int id);
+
+    Task Sort(IEnumerable<AccountTypeViewModel> accountTypes);
 }

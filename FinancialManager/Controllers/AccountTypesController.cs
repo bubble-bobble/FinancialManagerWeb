@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using FinancialManager.Models;
 using FinancialManager.Repositories;
@@ -102,5 +103,24 @@ public class AccountTypesController : Controller
         var userId = _usersRepository.SelectUserId();
         var exist = await _accountTypesRepository.SelectIfExistAccountType(name, userId);
         return exist ? Json($"Account type {name} already exists.") : Json(true);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Sort([FromBody] int[] ids)
+    {
+        var userId = _usersRepository.SelectUserId();
+        var accountTypes = await _accountTypesRepository.SelectAccountTypes(userId);
+        var accountTypesIds = accountTypes.Select(x => x.Id);
+        var dontBelong = ids.Except(accountTypesIds);
+        if (dontBelong.Any())
+        {
+            return Forbid();
+        }
+
+        var accountTypesToSorted = ids
+            .Select((value, index) => new AccountTypeViewModel { Id = value, Sequence = index + 1 })
+            .AsEnumerable();
+        await _accountTypesRepository.Sort(accountTypesToSorted);
+        return Ok();
     }
 }

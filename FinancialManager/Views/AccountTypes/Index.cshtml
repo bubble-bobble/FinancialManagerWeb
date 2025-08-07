@@ -16,20 +16,23 @@
         {
             <table class="table">
                 <thead>
-                    <tr>
-                        <th>Options</th>
-                        <th>Name</th>
-                    </tr>
+                <tr>
+                    <th>Options</th>
+                    <th>Name</th>
+                </tr>
                 </thead>
-                <tbody>
+                <tbody id="sortable">
                 @foreach (var accountType in Model)
                 {
                     <tr>
                         <td>
-                            <a asp-controller="AccountTypes" asp-action="Edit" asp-route-id="@accountType.Id" class="btn btn-warning">
+                            <input type="hidden" value="@accountType.Id" class="ids"/>
+                            <a asp-controller="AccountTypes" asp-action="Edit" asp-route-id="@accountType.Id"
+                               class="btn btn-warning">
                                 Edit
                             </a>
-                            <a asp-controller="AccountTypes" asp-action="Delete" asp-route-id="@accountType.Id" class="btn btn-danger">
+                            <a asp-controller="AccountTypes" asp-action="Delete" asp-route-id="@accountType.Id"
+                               class="btn btn-danger">
                                 Delete
                             </a>
                         </td>
@@ -47,3 +50,38 @@
         }
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_JQueryUIScriptsPartial"/>
+    <script>
+        const route = '@Url.Action("Sort")';
+        document.addEventListener('DOMContentLoaded', () => {
+            $("#sortable").sortable({
+                stop: async (event, ui) => {
+                    await sort();
+                }
+            });
+
+            const sort = async () => {
+                const ids = getIds();
+                await sendValues(ids);
+            }
+
+            const getIds = () => {
+                return Array.from(document.getElementsByClassName('ids'))
+                    .map(element => element.value);
+            }
+
+            const sendValues = async (ids) => {
+                const data = JSON.stringify(ids);
+                await fetch(route, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: data
+                });
+            }
+        });
+    </script>
+}
