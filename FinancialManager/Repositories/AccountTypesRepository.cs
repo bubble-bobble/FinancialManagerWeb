@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using FinancialManager.Models;
@@ -19,8 +20,10 @@ public class AccountTypesRepository : IAccountTypesRepository
     public async Task InsertAccountType(AccountTypeViewModel accountType)
     {
         await using var connection = new SqlConnection(_connectionString);
-        const string query = "INSERT INTO AccountTypes (Name, Sequence, UserId) VALUES (@Name, @Sequence, @UserId)";
-        await connection.ExecuteAsync(query, accountType);
+        const string storedProcedureName = "InsertAccountType";
+        _ = await connection.QuerySingleAsync<int>(storedProcedureName,
+            new { Name = accountType.Name, UserId = accountType.UserId},
+            commandType: CommandType.StoredProcedure);
     }
 
     public async Task<bool> SelectIfExistAccountType(string name, int userId)
