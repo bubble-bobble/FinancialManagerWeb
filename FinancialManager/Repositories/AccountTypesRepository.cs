@@ -1,10 +1,10 @@
-using System.Collections.Generic;
-using System.Data;
-using System.Threading.Tasks;
 using Dapper;
 using FinancialManager.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
 
 namespace FinancialManager.Repositories;
 
@@ -22,7 +22,7 @@ public class AccountTypesRepository : IAccountTypesRepository
         await using var connection = new SqlConnection(_connectionString);
         const string storedProcedureName = "InsertAccountType";
         _ = await connection.QuerySingleAsync<int>(storedProcedureName,
-            new { Name = accountType.Name, UserId = accountType.UserId},
+            new { Name = accountType.Name, UserId = accountType.UserId },
             commandType: CommandType.StoredProcedure);
     }
 
@@ -44,9 +44,9 @@ public class AccountTypesRepository : IAccountTypesRepository
     {
         await using var connection = new SqlConnection(_connectionString);
         const string query = "SELECT Id, Name, Sequence FROM AccountTypes WHERE Id = @Id AND UserId = @UserId";
-        return await connection.QueryFirstOrDefaultAsync<AccountTypeViewModel>(query, new { Id = id, UserId = userId });       
+        return await connection.QueryFirstOrDefaultAsync<AccountTypeViewModel>(query, new { Id = id, UserId = userId });
     }
-    
+
     public async Task UpdateAccountType(AccountTypeViewModel accountType)
     {
         await using var connection = new SqlConnection(_connectionString);

@@ -1,8 +1,8 @@
-using System.Linq;
-using System.Threading.Tasks;
 using FinancialManager.Models;
 using FinancialManager.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FinancialManager.Controllers;
 
@@ -22,9 +22,9 @@ public class AccountTypesController : Controller
     {
         var userId = _usersRepository.SelectUserId();
         var accountTypes = await _accountTypesRepository.SelectAccountTypes(userId);
-        return View(accountTypes);       
+        return View(accountTypes);
     }
-    
+
     [HttpGet]
     public IActionResult Create()
     {
@@ -44,7 +44,7 @@ public class AccountTypesController : Controller
         await _accountTypesRepository.InsertAccountType(accountType);
         return RedirectToAction("Index", "AccountTypes");
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
@@ -66,9 +66,9 @@ public class AccountTypesController : Controller
         {
             return RedirectToAction("Error", "Home");
         }
-        
+
         await _accountTypesRepository.UpdateAccountType(accountType);
-        return RedirectToAction("Index", "AccountTypes");       
+        return RedirectToAction("Index", "AccountTypes");
     }
 
     [HttpGet]

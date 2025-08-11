@@ -1,6 +1,6 @@
+using FinancialManager.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FinancialManager.Models;
 
 namespace FinancialManager.Repositories;
 
