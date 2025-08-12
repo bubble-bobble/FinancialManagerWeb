@@ -21,6 +21,7 @@ public class Startup
         services.AddControllersWithViews();
         services.AddTransient<IAccountTypesRepository, AccountTypesRepository>();
         services.AddTransient<IUsersRepository, UsersRepository>();
+        services.AddTransient<IAccountRepository, AccountRepository>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
