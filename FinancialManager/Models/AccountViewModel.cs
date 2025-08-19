@@ -18,5 +18,7 @@ namespace FinancialManager.Models
 
         [Display(Name = "Account Type")]
         public int AccountTypeId { get; set; }
+
+        public string AccountType { get; set; }
     }
 }

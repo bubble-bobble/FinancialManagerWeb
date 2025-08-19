@@ -1,0 +1,130 @@
+﻿@model IEnumerable<IndexAccountViewModel>
+
+@{
+    ViewData["Title"] = "Accounts";
+
+    string FormatBalance(decimal balance)
+    {
+        return Math.Abs(balance).ToString("N");
+    }
+
+    string NormalizeAccoordionId(string name)
+    {
+        return name.Replace(" ", "");
+    }
+
+    string GetAccordionId(string name)
+    {
+        string normalizedName = NormalizeAccoordionId(name);
+        return $"#{normalizedName}";
+    }
+
+    string GetBalanceCssClass(decimal balance)
+    {
+        return balance >= 0 ? "text-primary" : "text-danger";
+    }
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <h5 class="card-title">Accounts</h5>
+            <a asp-controller="Accounts" asp-action="Create">
+                Create account
+            </a>
+        </div>
+        <hr />
+        @if (Model.Any())
+        {
+            <div class="text-center">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    Active
+                                </h5>
+                                <h5 class="text-primary">
+                                    @FormatBalance(@Model.Where(x => x.Balance > 0).Sum(x => x.Balance))
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    Passive
+                                </h5>
+                                <h5 class="text-danger">
+                                    @FormatBalance(@Model.Where(x => x.Balance < 0).Sum(x => x.Balance))
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5>
+                                    Total
+                                </h5>
+                                <h5>
+                                    @FormatBalance(@Model.Sum(x => x.Balance))
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="accordion" id="accordionAccounts">
+                @foreach (var accountType in Model)
+                {
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="@GetAccordionId(accountType.AccountType)">
+                                <div class="d-flex justify-content-between w-100 me-3">
+                                    <span>
+                                        <strong>
+                                            @accountType.AccountType
+                                        </strong>
+                                    </span>
+                                    <span class="@GetBalanceCssClass(accountType.Balance)">
+                                        @FormatBalance(accountType.Balance)
+                                    </span>
+                                </div>
+                            </button>
+                        </h2>
+                        <div id="@accountType.AccountType.Replace(" ", "")" class="accordion-collapse collapse show"
+                             data-bs-parent="#accordionAccounts">
+                            <ul class="list-group">
+                                @foreach (var account in accountType.Accounts)
+                                {
+                                    <li class="list-group-item">
+                                        <div class="d-flex justify-content-between">
+                                            <span>
+                                                <strong>
+                                                    @account.Name
+                                                </strong>
+                                            </span>
+                                            <span class="@GetBalanceCssClass(account.Balance)">
+                                                @FormatBalance(account.Balance)
+                                            </span>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info" role="alert">
+                <p class="text-center">No accounts found</p>
+            </div>
+        }
+    </div>
+</div>

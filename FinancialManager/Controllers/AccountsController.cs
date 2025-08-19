@@ -8,18 +8,34 @@ using System.Threading.Tasks;
 
 namespace FinancialManager.Controllers
 {
-    public class AccountController : Controller
+    public class AccountsController : Controller
     {
         private readonly IAccountTypesRepository _accountTypesRepository;
         private readonly IUsersRepository _usersRepository;
-        private readonly IAccountRepository _accountRepository;
+        private readonly IAccountsRepository _accountRepository;
 
-        public AccountController(IAccountTypesRepository accountTypesRepository, IUsersRepository usersRepository,
-            IAccountRepository accountRepository)
+        public AccountsController(IAccountTypesRepository accountTypesRepository, IUsersRepository usersRepository,
+            IAccountsRepository accountRepository)
         {
             _accountTypesRepository = accountTypesRepository;
             _usersRepository = usersRepository;
             _accountRepository = accountRepository;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var userId = _usersRepository.SelectUserId();
+            var accounts = await _accountRepository.SelectAccounts(userId);
+            var model = accounts
+                .GroupBy(x => x.AccountType)
+                .Select(x => new IndexAccountViewModel
+                {
+                    AccountType = x.Key,
+                    Accounts = x.AsEnumerable(),
+                })
+                .ToList();
+            return View(model);
         }
 
         [HttpGet]

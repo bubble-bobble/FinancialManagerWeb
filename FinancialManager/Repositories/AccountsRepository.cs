@@ -2,6 +2,7 @@
 using FinancialManager.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FinancialManager.Repositories
@@ -21,7 +22,18 @@ namespace FinancialManager.Repositories
             const string query = @"INSERT INTO Accounts (Name, Description, Balance, AccountTypeId) 
                                    VALUES (@Name, @Description, @Balance, @AccountTypeId);
                                    SELECT SCOPE_IDENTITY();";
-            _ = connection.QuerySingleAsync<int>(query, account);
+            _ = await connection.QuerySingleAsync<int>(query, account);
+        }
+
+        public async Task<IEnumerable<AccountViewModel>> SelectAccounts(int userId)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            const string query = @"SELECT	ACC.Id, ACC.Name, ACC.Balance,	ACCT.Name AS AccountType 
+                                   FROM Accounts AS ACC
+	                                   INNER JOIN AccountTypes AS ACCT ON ACCT.Id = ACC.AccountTypeId
+                                   WHERE ACCT.UserId = @UserId
+                                   ORDER BY ACCT.Sequence";
+            return await connection.QueryAsync<AccountViewModel>(query, new { userId });
         }
     }
 }
