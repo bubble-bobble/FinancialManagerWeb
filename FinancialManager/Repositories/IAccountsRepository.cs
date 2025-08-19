@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace FinancialManager.Repositories
 {
-    public interface IAccountRepository
+    public interface IAccountsRepository
     {
         Task InsertAccount(AccountViewModel account);
         Task<IEnumerable<AccountViewModel>> SelectAccounts(int userId);

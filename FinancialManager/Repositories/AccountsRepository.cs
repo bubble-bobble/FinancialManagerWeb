@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace FinancialManager.Repositories
 {
-    public class AccountRepository : IAccountRepository
+    public class AccountsRepository : IAccountsRepository
     {
         private readonly string _connectionString;
 
-        public AccountRepository(IConfiguration configuration)
+        public AccountsRepository(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("FinancialManager");
         }
