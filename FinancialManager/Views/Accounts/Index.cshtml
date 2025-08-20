@@ -83,7 +83,7 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="@GetAccordionId(accountType.AccountType)">
+                                data-bs-target="@GetAccordionId(accountType.AccountType)">
                                 <div class="d-flex justify-content-between w-100 me-3">
                                     <span>
                                         <strong>
@@ -97,7 +97,7 @@
                             </button>
                         </h2>
                         <div id="@accountType.AccountType.Replace(" ", "")" class="accordion-collapse collapse show"
-                             data-bs-parent="#accordionAccounts">
+                            data-bs-parent="#accordionAccounts">
                             <ul class="list-group">
                                 @foreach (var account in accountType.Accounts)
                                 {
@@ -106,6 +106,13 @@
                                             <span>
                                                 <strong>
                                                     @account.Name
+                                                    <a asp-controller="Accounts" asp-action="Edit" asp-route-id="@account.Id"
+                                                        class="btn btn-primary">
+                                                        <img src="/lib/bootstrap-icons/pencil-fill.svg" alt="Edit icon">
+                                                    </a>
+                                                    <a href="" class="btn btn-danger">
+                                                        <img src="/lib/bootstrap-icons/trash-fill.svg" alt="Delete icon">
+                                                    </a>
                                                 </strong>
                                             </span>
                                             <span class="@GetBalanceCssClass(account.Balance)">

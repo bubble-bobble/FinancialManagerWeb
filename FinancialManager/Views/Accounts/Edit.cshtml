@@ -1,14 +1,15 @@
 ﻿@model CreateAccountViewModel
 
 @{
-    ViewData["Title"] = "Create account";
+    ViewData["Title"] = "Edit Account";
 }
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Create account form</h5>
+        <h5 class="card-title">Edit account form</h5>
         <hr />
-        <form asp-controller="Accounts" asp-action="Create">
+        <form asp-controller="Accounts" asp-action="Edit">
+            <input type="hidden" asp-for="Id" />
             <div class="mb-3">
                 <label asp-for="Name" class="form-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -31,7 +32,7 @@
                 </select>
                 <span asp-validation-for="AccountTypeId" class="text-danger"></span>
             </div>
-            <button class="btn btn-primary">Create</button>
+            <button class="btn btn-primary">Edit</button>
         </form>
     </div>
 </div>

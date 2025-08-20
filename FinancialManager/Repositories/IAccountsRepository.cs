@@ -7,6 +7,11 @@ namespace FinancialManager.Repositories
     public interface IAccountsRepository
     {
         Task InsertAccount(AccountViewModel account);
+
         Task<IEnumerable<AccountViewModel>> SelectAccounts(int userId);
+
+        Task<AccountViewModel> SelectAccount(int id, int userId);
+
+        Task UpdateAccount(CreateAccountViewModel account);
     }
 }

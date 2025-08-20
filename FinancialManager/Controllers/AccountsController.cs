@@ -67,6 +67,50 @@ namespace FinancialManager.Controllers
             return RedirectToAction("Index", "Account");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var userId = _usersRepository.SelectUserId();
+            var account = await _accountRepository.SelectAccount(id, userId);
+            if (account is null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            var model = new CreateAccountViewModel
+            {
+                Id = account.Id,
+                Name = account.Name,
+                Description = account.Description,
+                Balance = account.Balance,
+                AccountTypeId = account.AccountTypeId,
+                AccountTypes = await GetAccountTypes(userId)
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(CreateAccountViewModel account)
+        {
+            var userId = _usersRepository.SelectUserId();
+            var accountExist = await _accountRepository.SelectAccount(account.Id, userId);
+            if (accountExist is null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            var accountTypeExist = await _accountTypesRepository.SelectAccountType(account.AccountTypeId, userId);
+            if (accountTypeExist is null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            if (!ModelState.IsValid)
+            {
+                account.AccountTypes = await GetAccountTypes(userId);
+                return View(account);
+            }
+            await _accountRepository.UpdateAccount(account);
+            return RedirectToAction("Index", "Accounts");
+        }
+
         private async Task<IEnumerable<SelectListItem>> GetAccountTypes(int userId)
         {
             var accountTypes = await _accountTypesRepository.SelectAccountTypes(userId);
