@@ -107,6 +107,30 @@ namespace FinancialManager.Controllers
             return RedirectToAction("Index", "Accounts");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            int userId = _usersRepository.SelectUserId();
+            var account = await _accountRepository.SelectAccount(id, userId);
+            if (account is null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            return View(account);
+        }
+
+        public async Task<IActionResult> ConfirmDelete(int id)
+        {
+            int userId = _usersRepository.SelectUserId();
+            var account = await _accountRepository.SelectAccount(id, userId);
+            if (account is null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            await _accountRepository.DeleteAccount(id);
+            return RedirectToAction("Index", "Accounts");
+        }
+
         private async Task<IEnumerable<SelectListItem>> GetAccountTypes(int userId)
         {
             var accountTypes = await _accountTypesRepository.SelectAccountTypes(userId);

@@ -13,5 +13,6 @@ namespace FinancialManager.Repositories
         Task<AccountViewModel> SelectAccount(int id, int userId);
 
         Task UpdateAccount(CreateAccountViewModel account);
+        Task DeleteAccount(int id);
     }
 }

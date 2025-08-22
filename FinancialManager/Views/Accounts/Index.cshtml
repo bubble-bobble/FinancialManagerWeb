@@ -110,7 +110,8 @@
                                                         class="btn btn-primary">
                                                         <img src="/lib/bootstrap-icons/pencil-fill.svg" alt="Edit icon">
                                                     </a>
-                                                    <a href="" class="btn btn-danger">
+                                                    <a asp-controller="Accounts" asp-action="Delete" asp-route-id="@account.Id"
+                                                        class="btn btn-danger">
                                                         <img src="/lib/bootstrap-icons/trash-fill.svg" alt="Delete icon">
                                                     </a>
                                                 </strong>

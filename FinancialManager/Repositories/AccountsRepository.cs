@@ -55,5 +55,12 @@ namespace FinancialManager.Repositories
                                    WHERE Id = @Id";
             await connection.ExecuteAsync(query, account);
         }
+
+        public async Task DeleteAccount(int id)
+        {
+            await using var connection = new SqlConnection(_connectionString);
+            const string query = @"DELETE FROM Accounts WHERE Id = @Id;";
+            await connection.ExecuteAsync(query, new { id });
+        }
     }
 }
