@@ -1,4 +1,5 @@
-﻿using FinancialManager.Models;
+﻿using AutoMapper;
+using FinancialManager.Models;
 using FinancialManager.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,19 +14,21 @@ namespace FinancialManager.Controllers
         private readonly IAccountTypesRepository _accountTypesRepository;
         private readonly IUsersRepository _usersRepository;
         private readonly IAccountsRepository _accountRepository;
+        private readonly IMapper mapper;
 
         public AccountsController(IAccountTypesRepository accountTypesRepository, IUsersRepository usersRepository,
-            IAccountsRepository accountRepository)
+            IAccountsRepository accountRepository, IMapper mapper)
         {
             _accountTypesRepository = accountTypesRepository;
             _usersRepository = usersRepository;
             _accountRepository = accountRepository;
+            this.mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var userId = _usersRepository.SelectUserId();
+            int userId = _usersRepository.SelectUserId();
             var accounts = await _accountRepository.SelectAccounts(userId);
             var model = accounts
                 .GroupBy(x => x.AccountType)
@@ -41,7 +44,7 @@ namespace FinancialManager.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var userId = _usersRepository.SelectUserId();
+            int userId = _usersRepository.SelectUserId();
             var model = new CreateAccountViewModel
             {
                 AccountTypes = await GetAccountTypes(userId)
@@ -52,7 +55,7 @@ namespace FinancialManager.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateAccountViewModel account)
         {
-            var userId = _usersRepository.SelectUserId();
+            int userId = _usersRepository.SelectUserId();
             var accountType = _accountTypesRepository.SelectAccountType(account.Id, userId);
             if (accountType is null)
             {
@@ -70,28 +73,21 @@ namespace FinancialManager.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var userId = _usersRepository.SelectUserId();
+            int userId = _usersRepository.SelectUserId();
             var account = await _accountRepository.SelectAccount(id, userId);
             if (account is null)
             {
                 return RedirectToAction("Error", "Home");
             }
-            var model = new CreateAccountViewModel
-            {
-                Id = account.Id,
-                Name = account.Name,
-                Description = account.Description,
-                Balance = account.Balance,
-                AccountTypeId = account.AccountTypeId,
-                AccountTypes = await GetAccountTypes(userId)
-            };
+            var model = mapper.Map<CreateAccountViewModel>(account);
+            model.AccountTypes = await GetAccountTypes(userId);
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(CreateAccountViewModel account)
         {
-            var userId = _usersRepository.SelectUserId();
+            int userId = _usersRepository.SelectUserId();
             var accountExist = await _accountRepository.SelectAccount(account.Id, userId);
             if (accountExist is null)
             {

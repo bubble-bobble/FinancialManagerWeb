@@ -19,6 +19,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllersWithViews();
+        services.AddAutoMapper(typeof(Startup));
         services.AddTransient<IAccountTypesRepository, AccountTypesRepository>();
         services.AddTransient<IUsersRepository, UsersRepository>();
         services.AddTransient<IAccountsRepository, AccountsRepository>();
